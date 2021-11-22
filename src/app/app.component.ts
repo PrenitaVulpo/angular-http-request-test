@@ -10,7 +10,7 @@ import Post from "./post.model";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+  loadedPosts: Post[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   onCreatePost(postData: Post) {
     // Send Http request
     this.http
-      .post(`${environment.apiURL}posts.json`, postData)
+      .post<{ name: string }>(`${environment.apiURL}posts.json`, postData)
       .subscribe((responseData) => {
         console.log(responseData);
       });
@@ -37,9 +37,9 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     this.http
-      .get(`${environment.apiURL}posts.json`)
+      .get<{ [key: string]: Post }>(`${environment.apiURL}posts.json`)
       .pipe(
-        map((responseData: { [key: string]: Post }) => {
+        map((responseData) => {
           const postsArray: Post[] = [];
 
           for (const key in responseData) {
@@ -50,6 +50,6 @@ export class AppComponent implements OnInit {
           return postsArray;
         })
       )
-      .subscribe((posts) => console.log(posts));
+      .subscribe((posts) => (this.loadedPosts = posts));
   }
 }
