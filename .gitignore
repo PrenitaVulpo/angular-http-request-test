@@ -2,7 +2,7 @@
 
 # enviroment variables
 
-/src/environments/environment.ts
+src/environments/environment.ts
 
 # compiled output
 /dist
